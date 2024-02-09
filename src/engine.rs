@@ -68,8 +68,3 @@ fn eval_pos(board: Board) -> f64 {
     // println!("Score: {}", final_score);
     return final_score;
 }
-
-fn get_moves(board: Board) -> MoveGen {
-    let movegen: MoveGen = MoveGen::new_legal(&board);
-    return movegen;
-}
