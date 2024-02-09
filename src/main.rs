@@ -6,11 +6,29 @@ use std::io::{self, Write};
 mod engine;
 mod piece_values; // Declare the piece_values module
 
+/// # Params
+/// * 'fen' - the FEN string to parse (put it in "quotes")
+/// # Example
+/// ./target/debug/rust-engine "rr4k1/5pp1/3b3p/p1p2B2/P1Pp4/4PP2/1P4PP/RR4K1 w - - 0 24"
 fn main() {
+    // TODO: Make it so that the computer can play as white
+    // get args
+    let mut fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.len() > 1 {
+        let fen_string = &args[1];
+        fen = fen_string;
+        // Now you can use fen_string
+        println!("FEN string: {}", fen_string);
+    } else {
+        println!("No FEN string provided");
+    }
+
     // init board, human player color
     // TODO: Use "game" instead of jhust board
     // for UCI and 3-fold repetitions
-    let mut board: Board = Board::from_str("rr4k1/5pp1/3b3p/p1p2B2/P1Pp4/4PP2/1P4PP/RR4K1 w - - 0 24").expect("invalid FEN");
+    let mut board: Board = Board::from_str(fen).expect("invalid FEN");
     let opp: Color = Color::White;
 
     // init human move and engine move
@@ -48,11 +66,11 @@ fn main() {
                 Some(best_move) => {
                     board = board.make_move_new(best_move);
                     println!("Engine played: {}", best_move.to_string());
-                } None => {
-                    panic!("Couldn't find a good move?");
+                }
+                None => {
+                    panic!("FAILED: Engine could not find a move");
                 }
             }
-
         }
     }
 }
