@@ -8,33 +8,45 @@ const KNIGHT_VALUE: f64 = 300.0;
 const ROOK_VALUE: f64 = 500.0;
 const QUEEN_VALUE: f64 = 900.0;
 
+pub fn minimax(board: Board, depth: u8, maximizing_player: bool) -> f64 {
+    // return eval_pos
+    if depth == 0 {
+        return eval_pos(board);
+    }
+
+    let moves = MoveGen::new_legal(&board);
+    if maximizing_player {
+        let mut best_score = -f64::INFINITY;
+        for a in moves {
+            let test_board = board.make_move_new(a);
+            best_score = best_score.max(minimax(test_board, depth - 1, false));
+        }
+        best_score
+    } else {
+        let mut best_score = f64::INFINITY;
+        for a in moves {
+            let test_board = board.make_move_new(a);
+            best_score = best_score.min(minimax(test_board, depth - 1, true));
+        }
+        best_score
+    }
+}
+
 pub fn get_best_move(board: Board, depth: u8) -> Option<ChessMove> {
-    let mut test_board = board;
     let mut best_move: Option<ChessMove> = None;
     let mut best_score = -f64::INFINITY;
     let moves = MoveGen::new_legal(&board);
 
     for a in moves {
-        let temp_board = test_board;
-        test_board = test_board.make_move_new(a);
-        if eval_pos(test_board) > best_score {
+        let test_board = board.make_move_new(a);
+        let score = minimax(test_board, depth - 1, false);
+        if score > best_score {
             best_move = Some(a);
-            best_score = eval_pos(test_board);
+            best_score = score;
         }
-        test_board = temp_board;
     }
 
-    match best_move {
-        Some(chess_move) => {
-            // Use chess_move here...
-            return Some(chess_move);
-        }
-        None => {
-            // Handle the case where best_move was not set...
-            println!("couldn't find move");
-            return None;
-        }
-    }
+    best_move
 }
 
 fn eval_pos(board: Board) -> f64 {
@@ -62,10 +74,8 @@ fn eval_pos(board: Board) -> f64 {
                 Piece::Queen => (QUEEN_VALUE /* + piece_values::QUEEN.get(square.to_index()).unwrap() */) * side_multiplier,
                 Piece::King => 0.0,
             };
-        } else {
-            // println!("No piece")
-        }
+        } else { }
     }
-    println!("Score: {}", final_score);
+    // println!("Score: {}", final_score);
     return final_score;
 }

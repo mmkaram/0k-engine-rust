@@ -27,7 +27,6 @@ fn main() {
             io::stdin()
                 .read_line(&mut input)
                 .expect("Failed to read line");
-            // println!("You entered: {}", input);
 
             // attempt to take human move and play it if from_san() is successful
             // throw error if from_san() fails
@@ -45,7 +44,7 @@ fn main() {
         } else {
             // if it's the engine's move, play the engine's best move
             assert_eq!(board.side_to_move(), Color::Black);
-            match engine::get_best_move(board, 1) {
+            match engine::get_best_move(board, 4) {
                 Some(best_move) => {
                     board = board.make_move_new(best_move);
                     println!("Engine played: {}", best_move.to_string());
