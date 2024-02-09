@@ -1,4 +1,5 @@
 use chess::{Board, BoardStatus, ChessMove, Color};
+use std::str::FromStr;
 
 use std::io::{self, Write};
 
@@ -7,7 +8,9 @@ mod piece_values; // Declare the piece_values module
 
 fn main() {
     // init board, human player color
-    let mut board: Board = Board::default();
+    // TODO: Use "game" instead of jhust board
+    // for UCI and 3-fold repetitions
+    let mut board: Board = Board::from_str("rr4k1/5pp1/3b3p/p1p2B2/P1Pp4/4PP2/1P4PP/RR4K1 w - - 0 24").expect("invalid FEN");
     let opp: Color = Color::White;
 
     // init human move and engine move
@@ -41,7 +44,8 @@ fn main() {
             }
         } else {
             // if it's the engine's move, play the engine's best move
-            match engine::get_best_move(board) {
+            assert_eq!(board.side_to_move(), Color::Black);
+            match engine::get_best_move(board, 1) {
                 Some(best_move) => {
                     board = board.make_move_new(best_move);
                     println!("Engine played: {}", best_move.to_string());

@@ -8,19 +8,20 @@ const KNIGHT_VALUE: f64 = 300.0;
 const ROOK_VALUE: f64 = 500.0;
 const QUEEN_VALUE: f64 = 900.0;
 
-pub fn get_best_move(board: Board) -> Option<ChessMove> {
+pub fn get_best_move(board: Board, depth: u8) -> Option<ChessMove> {
     let mut test_board = board;
-    // let mut best_move;
     let mut best_move: Option<ChessMove> = None;
     let mut best_score = -f64::INFINITY;
     let moves = MoveGen::new_legal(&board);
 
     for a in moves {
+        let temp_board = test_board;
         test_board = test_board.make_move_new(a);
-        if eval_pos(test_board) < best_score {
+        if eval_pos(test_board) > best_score {
             best_move = Some(a);
             best_score = eval_pos(test_board);
         }
+        test_board = temp_board;
     }
 
     match best_move {
@@ -65,6 +66,6 @@ fn eval_pos(board: Board) -> f64 {
             // println!("No piece")
         }
     }
-    // println!("Score: {}", final_score);
+    println!("Score: {}", final_score);
     return final_score;
 }
