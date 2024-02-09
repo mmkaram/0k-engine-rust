@@ -19,8 +19,8 @@ fn main() {
     // while the there are still moves to be made
     // (not a checkmate or a stalemate)
     while board.status() == BoardStatus::Ongoing {
+        // if it's the humans player's turn, take the human's move
         if board.side_to_move() == opp {
-            // if it's human player's turn, ask for move and TODO: play it if legal
             io::stdout()
                 .write_all(b"Enter Move: \n")
                 .expect("Failed to write to stdout");

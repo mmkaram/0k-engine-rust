@@ -67,7 +67,7 @@ fn eval_pos(board: Board) -> f64 {
         // Add the piece's values * its side to the final score
         if let Some(piece) = piece {
             final_score += match piece {
-                Piece::Pawn => (PAWN_VALUE + piece_values::WHITE_PAWN.get(square.to_index()).unwrap()) * side_multiplier,
+                Piece::Pawn => (PAWN_VALUE + piece_values::PAWN.get(square.to_index()).unwrap()) * side_multiplier,
                 Piece::Knight => (KNIGHT_VALUE + piece_values::KNIGHT.get(square.to_index()).unwrap()) * side_multiplier,
                 Piece::Bishop => (BISHOP_VALUE + piece_values::BISHOP.get(square.to_index()).unwrap()) * side_multiplier,
                 Piece::Rook => (ROOK_VALUE + piece_values::ROOK.get(square.to_index()).unwrap()) * side_multiplier,
@@ -77,5 +77,5 @@ fn eval_pos(board: Board) -> f64 {
         } else { }
     }
     // println!("Score: {}", final_score);
-    return final_score;
+    final_score
 }
